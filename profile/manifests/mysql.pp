@@ -10,10 +10,22 @@ class profile::mysql{
 #GRANT ALL PRIVILEGES ON *.* TO 'puppet'@'%' WITH GRANT OPTION;
 #FLUSH PRIVILEGES;
 
+	$override_options = {
+		'mysqld' => {
+			'bind-address' => '0.0.0.0',
+		}
+	}
 
 	class { '::mysql::server':
 		root_password => 'puppetlabs',
+		override_options => $override_options,
 	}	
 
+	mysql::db { 'videolist':
+		user => 'puppet',
+		password => 'puppetlabs',
+		host => 'localhost',
+		grant => ['ALL'],
+	}
 
 }
